@@ -16,7 +16,7 @@ class Usuario extends Authenticatable
         'password',
         'cidade',
         'data_nascimento',
-        'tipo_usuario',
+        'tipo',
         'nome_curso',
         'cpf'
     ];
