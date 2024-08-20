@@ -18,11 +18,6 @@
                     </form>
                 </div>
                 {{-- @endif --}}
-                @else
-                <div class="nav-bar">
-                    <a href="/login"><h2>Login</h2></a>
-                    <a href="/registro"><h2>Registre-se</h2></a>
-                </div>
             @endif
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +25,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/login') }}">Login</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/jobs') }}">Vagas</a>
                     </li>
