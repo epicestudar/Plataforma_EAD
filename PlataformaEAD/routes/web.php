@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VagaController;
+use App\Http\Middleware\CursoMiddleware;
 use App\Http\Middleware\VagaMiddleware;
 
 // Rota para exibir o formulário de login
@@ -36,3 +38,7 @@ name('usuarios.logout');
 
 // Rota para o dashboard, protegida por autenticação
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+
+Route::resource('/cursos', CursoController::class)->middleware(CursoMiddleware::class)->except('show');
+
+Route::get('cursos/{curso}', [CursoController::class, 'show'])->middleware('auth')->name('cursos.show');
