@@ -40,8 +40,15 @@ name('usuarios.logout');
 // Rota para o dashboard, protegida por autenticação
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
+// Defina a rota 'cursos.alunos' antes do recurso 'cursos'
+Route::get('cursos/{curso}/alunos', [CursoController::class, 'alunos'])->middleware('auth')->name('cursos.alunos');
+
+// Defina as rotas de recurso para 'cursos'
 Route::resource('/cursos', CursoController::class)->middleware(CursoMiddleware::class)->except('show');
 
+// Rota para exibir o curso específico
 Route::get('cursos/{curso}', [CursoController::class, 'show'])->middleware('auth')->name('cursos.show');
 
 Route::post('matricula/add/{curso}', [MatriculaController::class, 'add'])->middleware('auth')->name('matricula.add');
+
+

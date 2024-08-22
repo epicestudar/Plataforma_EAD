@@ -109,4 +109,19 @@ class CursoController extends Controller
     
         return view('cursos.show', compact('curso', 'jaMatriculado'));
     }
+
+    public function alunos(Curso $curso)
+{
+    // Carrega as matrículas e os alunos associados ao curso
+    $curso->load('inscricoes.aluno');
+
+    // Verifica se o usuário autenticado é o professor deste curso
+    $usuario = Auth::user();
+    if ($usuario->id !== $curso->professor_id) {
+        return redirect()->route('cursos.index')->with('error', 'Você não tem permissão para ver os alunos deste curso.');
+    }
+
+    return view('cursos.alunos', compact('curso'));
+}
+
 }
