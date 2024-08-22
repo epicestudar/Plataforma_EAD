@@ -31,7 +31,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 @if (Auth::user()->isDocente())
-                                    <li><a class="dropdown-item" href="/vagas">Dashboard de Vagas</a></li>
+                                    <li><a class="dropdown-item" href="/cursos">Dashboard de Cursos</a></li>
                                 @endif
                                 <li>
                                     <form action="/logout" method="POST">

@@ -19,6 +19,10 @@ class Curso extends Model
     public function inscricoes() {
         return $this->hasMany(Matricula::class);
     }
+
+    public function professor() {
+        return $this->belongsTo(Usuario::class, 'professor_id');
+    }
 }
 
 

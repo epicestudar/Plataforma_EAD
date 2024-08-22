@@ -16,11 +16,13 @@ class Matricula extends Model
         'status',
     ];
 
-    public function aluno() {
-        return $this->belongsTo(Usuario::class);
+    public function aluno()
+    {
+        return $this->belongsTo(Usuario::class, 'aluno_id');
     }
 
-    public function curso() {
-        return $this->belongsTo(Curso::class);
+    public function curso()
+    {
+        return $this->belongsTo(Curso::class, 'curso_id');
     }
 }

@@ -9,10 +9,12 @@ class DashboardController extends Controller
 {
     public function index(Request $request) {
         $search = $request->input('search');
+
         $cursos = Curso::when($search, function($query, $search) {
-            return $query->where('titulo', 'like', "%{$search}%")
-                         ->orWhere('descricao', 'like', "%{$search}%")
-                         ->orWhere('categoria', 'like', "%{$search}%");
+            $search = strtolower($search); // Convertendo o termo de busca para minúsculas
+            return $query->whereRaw('LOWER(titulo) LIKE ?', ["%{$search}%"])
+                         ->orWhereRaw('LOWER(descricao) LIKE ?', ["%{$search}%"])
+                         ->orWhereRaw('LOWER(categoria) LIKE ?', ["%{$search}%"]);
         })->get();
 
         return view('usuarios.dashboard', compact('cursos'));

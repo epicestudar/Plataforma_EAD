@@ -29,16 +29,17 @@ class Usuario extends Authenticatable
         return $this->hasMany(Matricula::class);
     }
 
+    // Método para verificar se o usuário é um aluno
     public function isAluno() {
-        return $this->tipo_usuario === 'aluno';
+        return $this->tipo === 'aluno';
     }
 
+    // Método para verificar se o usuário é um docente (professor)
     public function isDocente() {
         return $this->tipo === 'docente';
     }
 
     protected $casts = [
-        'tipo_usuario' => 'string',
+        'tipo' => 'string', // Certifique-se de que 'tipo' está sendo tratado como string
     ];
-    
 }

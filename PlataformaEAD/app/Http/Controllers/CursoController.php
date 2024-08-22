@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Curso;
+use App\Models\Matricula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -97,6 +98,15 @@ class CursoController extends Controller
      */
     public function show(Curso $curso)
     {
-        return view('cursos.show', compact('curso'));
+        // Carrega as informações do professor associado ao curso
+        $curso->load('professor');
+    
+        // Verifica se o usuário autenticado já está matriculado neste curso
+        $usuario = Auth::user();
+        $jaMatriculado = Matricula::where('aluno_id', $usuario->id)
+                                  ->where('curso_id', $curso->id)
+                                  ->exists();
+    
+        return view('cursos.show', compact('curso', 'jaMatriculado'));
     }
 }
