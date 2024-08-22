@@ -83,4 +83,8 @@ class CursoController extends Controller
         return redirect()->route('cursos.index')
             ->with('success', 'Curso Deletado com sucesso.');
     }
+
+    public function show(Curso $curso) {
+        return view('cursos.show', compact('curso'));
+    }
 }

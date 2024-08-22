@@ -34,7 +34,7 @@ class Usuario extends Authenticatable
     }
 
     public function isDocente() {
-        return $this->tipo_usuario === 'docente';
+        return $this->tipo === 'docente';
     }
 
     protected $casts = [

@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class MatriculaController extends Controller
 {
     public function add(Curso $curso) {
-        // $matricula = Matricula::create(['aluno_id' => Auth::id(), 'curso_id' => $curso->id]);
+        $matricula = new Matricula();
+        $matricula->aluno_id = Auth::id();
+        $matricula->curso_id = $curso->id;
+        $matricula->data_matricula = now(); // Preenche a data de matrícula com a data atual
+        $matricula->status = 'pendente';
+        $matricula->save();
 
-        // return redirect()->route('cursos.show', $matricula->id)->with('success', 'Matrícula adicionado ao curso.');
+        return redirect()->route('cursos.show', $curso->id)->with('success', 'Matrícula realizada com sucesso.');
     }
 }

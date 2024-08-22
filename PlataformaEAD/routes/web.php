@@ -4,6 +4,7 @@ use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
+use App\Http\Controllers\MatriculaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VagaController;
@@ -42,3 +43,5 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('aut
 Route::resource('/cursos', CursoController::class)->middleware(CursoMiddleware::class)->except('show');
 
 Route::get('cursos/{curso}', [CursoController::class, 'show'])->middleware('auth')->name('cursos.show');
+
+Route::post('matricula/add/{curso}', [MatriculaController::class, 'add'])->middleware('auth')->name('matricula.add');
