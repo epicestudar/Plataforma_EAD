@@ -13,7 +13,13 @@ class CursoController extends Controller
      */
     public function index()
     {
-        $cursos = Curso::all();
+        // Obtém o ID do professor logado
+        $professorId = Auth::id();
+
+        // Filtra os cursos pelo ID do professor logado
+        $cursos = Curso::where('professor_id', $professorId)->get();
+
+        // Retorna a view com os cursos filtrados
         return view('cursos.index', compact('cursos'));
     }
 
@@ -30,16 +36,17 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
+        // Valida os dados de entrada
         $dados = $request->validate([
             'titulo' => 'required|max:100',
             'descricao' => 'required',
             'categoria' => 'required',
-            // Não incluímos professor_id aqui
         ]);
 
-        // Define professor_id como o ID do usuário autenticado
+        // Adiciona o ID do professor logado aos dados do curso
         $dados['professor_id'] = Auth::id();
 
+        // Cria o curso com os dados validados
         Curso::create($dados);
 
         return redirect()->route('cursos.index')
@@ -59,18 +66,18 @@ class CursoController extends Controller
      */
     public function update(Request $request, Curso $curso)
     {
+        // Valida os dados de entrada
         $dados = $request->validate([
             'titulo' => 'required|max:100',
             'descricao' => 'required',
             'categoria' => 'required',
-            // Não incluímos professor_id aqui
         ]);
 
-        // Atualize o curso com os novos dados, mas não altere professor_id
+        // Atualiza o curso com os dados validados, sem alterar o professor_id
         $curso->update($dados);
 
         return redirect()->route('cursos.index')
-            ->with('success', 'Curso Atualizado com sucesso.');
+            ->with('success', 'Curso atualizado com sucesso.');
     }
 
     /**
@@ -78,13 +85,18 @@ class CursoController extends Controller
      */
     public function destroy(Curso $curso)
     {
+        // Deleta o curso
         $curso->delete();
 
         return redirect()->route('cursos.index')
-            ->with('success', 'Curso Deletado com sucesso.');
+            ->with('success', 'Curso deletado com sucesso.');
     }
 
-    public function show(Curso $curso) {
+    /**
+     * Show the details of a specific course.
+     */
+    public function show(Curso $curso)
+    {
         return view('cursos.show', compact('curso'));
     }
 }
