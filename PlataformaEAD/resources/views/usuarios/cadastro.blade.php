@@ -61,6 +61,11 @@
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">Registrar-se</button>
                         </div>
+
+                        {{-- Botão Voltar --}}
+                    <div class="d-grid mt-3">
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">Voltar</a>
+                    </div>
                     </form>
                 </div>
             </div>

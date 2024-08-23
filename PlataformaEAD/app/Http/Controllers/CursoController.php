@@ -6,6 +6,8 @@ use App\Models\Curso;
 use App\Models\Matricula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class CursoController extends Controller
 {
@@ -28,31 +30,39 @@ class CursoController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('cursos.create');
-    }
+{
+    // Adiciona log para depuração
+    Log::info('Método Create Chamado');
+
+    return view('cursos.create');
+}
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Valida os dados de entrada
-        $dados = $request->validate([
-            'titulo' => 'required|max:100',
-            'descricao' => 'required',
-            'categoria' => 'required',
-        ]);
+{
+    // Valida os dados de entrada
+    $dados = $request->validate([
+        'titulo' => 'required|max:100',
+        'descricao' => 'required',
+        'categoria' => 'required',
+    ]);
 
-        // Adiciona o ID do professor logado aos dados do curso
-        $dados['professor_id'] = Auth::id();
+    // Adiciona o ID do professor logado aos dados do curso
+    $dados['professor_id'] = Auth::id();
 
-        // Cria o curso com os dados validados
-        Curso::create($dados);
+    // Adiciona log para depuração
+    Log::info('Dados do Curso a ser Criado:', $dados);
 
-        return redirect()->route('cursos.index')
-            ->with('success', 'Curso criado com sucesso.');
-    }
+    // Cria o curso com os dados validados
+    Curso::create($dados);
+
+    return redirect()->route('cursos.index')
+        ->with('success', 'Curso criado com sucesso.');
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -97,18 +107,26 @@ class CursoController extends Controller
      * Show the details of a specific course.
      */
     public function show(Curso $curso)
-    {
-        // Carrega as informações do professor associado ao curso
-        $curso->load('professor');
-    
-        // Verifica se o usuário autenticado já está matriculado neste curso
-        $usuario = Auth::user();
-        $jaMatriculado = Matricula::where('aluno_id', $usuario->id)
-                                  ->where('curso_id', $curso->id)
-                                  ->exists();
-    
-        return view('cursos.show', compact('curso', 'jaMatriculado'));
-    }
+{
+    // Adiciona log para depuração
+    Log::info('ID do Curso no Método Show:', ['curso_id' => $curso->id]);
+
+    // Carrega as informações do professor associado ao curso
+    $curso->load('professor');
+
+    // Verifica se o usuário autenticado já está matriculado neste curso
+    $usuario = Auth::user();
+    $jaMatriculado = Matricula::where('aluno_id', $usuario->id)
+                              ->where('curso_id', $curso->id)
+                              ->exists();
+
+    // Adiciona log para depuração
+    Log::info('Status de Matrícula do Usuário:', ['jaMatriculado' => $jaMatriculado]);
+
+    return view('cursos.show', compact('curso', 'jaMatriculado'));
+}
+
+
 
     public function alunos(Curso $curso)
 {
@@ -123,5 +141,25 @@ class CursoController extends Controller
 
     return view('cursos.alunos', compact('curso'));
 }
+
+public function meusCursos()
+{
+    // Obtém o usuário autenticado
+    $usuario = Auth::user();
+
+    // Verifica se o usuário é um aluno
+    if ($usuario->tipo !== 'aluno') {
+        return redirect()->route('dashboard')->with('error', 'Apenas alunos podem acessar esta página.');
+    }
+
+    // Obtém os cursos em que o aluno está matriculado
+    $cursos = Curso::whereHas('inscricoes', function ($query) use ($usuario) {
+        $query->where('aluno_id', $usuario->id);
+    })->get();
+
+    // Retorna a view com os cursos matriculados
+    return view('cursos.matriculados', compact('cursos'));
+}
+
 
 }

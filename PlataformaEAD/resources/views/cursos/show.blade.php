@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="container mt-5">
+    {{-- Botão Voltar --}}
+    <div class="mb-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">Voltar</a>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card shadow-sm">
@@ -27,13 +32,13 @@
             </div>
 
             @if (!$jaMatriculado)
-                    <form method="POST" action="{{ route('matricula.add', $curso->id) }}">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Fazer Matrícula</button>
-                    </form>
-                @else
-                    <p class="text-success">Você já está matriculado neste curso.</p>
-                @endif
+                <form method="POST" action="{{ route('matricula.add', $curso->id) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Fazer Matrícula</button>
+                </form>
+            @else
+                <p class="text-success">Você já está matriculado neste curso.</p>
+            @endif
         </div>
     </div>
     <div class="row mt-5">

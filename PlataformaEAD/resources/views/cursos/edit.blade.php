@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="my-4">Criar Curso</h1>
+    <h1 class="my-4">Editar Curso</h1>
 
 
     @if ($errors->any())

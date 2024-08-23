@@ -22,25 +22,37 @@ class UsuarioController extends Controller
      * Show the form for creating a new resource.
      */
     public function logicaLogin(Request $request)
-    {
-        // validação para o login
+{
+    // Validação dos campos
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+    // Verificar se o email existe
+    $usuario = Usuario::where('email', $credentials['email'])->first();
 
-        // vai autenticar com o guard usuario
-        if (Auth::guard('usuario')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
-        }
-
-        // caso dê erro retorna a exception
+    if (!$usuario) {
+        // Email não existe no banco de dados
         return back()->withErrors([
-            'email' => 'As credenciais não correspondem aos nossos registros.',
+            'email' => 'O email não está registrado em nosso sistema.',
         ])->onlyInput('email');
     }
+
+    // Verificar se a senha está correta
+    if (!Auth::guard('usuario')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+        // Senha incorreta
+        return back()->withErrors([
+            'password' => 'A senha está incorreta.',
+        ])->onlyInput('email');
+    }
+
+    // Autenticar e redirecionar se as credenciais forem válidas
+    $request->session()->regenerate();
+    return redirect()->intended('/dashboard');
+}
+
+
 
     public function formularioCadastro()
     {
